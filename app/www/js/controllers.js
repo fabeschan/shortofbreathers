@@ -5,6 +5,7 @@ angular.module('application.controllers', [])
         $scope.status;
         $scope.models;
         getModels();
+        $scope.doRefresh = getModels;
         function getModels () {
             ServerSession.getModels ()
                 .success(function (models) {
@@ -12,6 +13,10 @@ angular.module('application.controllers', [])
                 })
                 .error(function (error) {
                     $scope.status = 'Unable to load models: ' + error.message;
+                })
+                .finally(function() {
+                    // Stop the ion-refresher from spinning
+                    $scope.$broadcast('scroll.refreshComplete');
                 });
         }
     }])
@@ -31,7 +36,11 @@ angular.module('application.controllers', [])
                         $scope.models = models;
                         getModelInfo($routeParams.param);
                     })
-                    .error(function (error) { $scope.status = 'Unable to load models: ' + error.message; });
+                    .error(function (error) { $scope.status = 'Unable to load models: ' + error.message; })
+                    .finally(function() {
+                        // Stop the ion-refresher from spinning
+                        $scope.$broadcast('scroll.refreshComplete');
+                    });
             }
 
             function getModelInfo (id) {
@@ -55,6 +64,8 @@ angular.module('application.controllers', [])
                     .error(function (error) { console.log('Unable to load models: ' + error.message); });
             }
 
+            $scope.doRefresh = getModels;
+
             $scope.bracket = function(num, obj){
                 var k = [];
                 for (o in obj) k.push(obj[o].index);
@@ -66,11 +77,11 @@ angular.module('application.controllers', [])
             
             $scope.join = function () {
                 eval(joinFunc);
-                console.log($scope.perc_rule);
                 $scope.probability = $scope.patient['probability'];
                 console.log("Evaluated Join Function");
                 PlotData.setPoint([$scope.patient['probability'], $scope.output_value[0]]);
             };
+
     }])
 
     .controller('PlotCtrl', ['$scope', 'PlotData', '$ionicNavBarDelegate',

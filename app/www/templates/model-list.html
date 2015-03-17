@@ -9,6 +9,11 @@
     </div>
 
     <ion-content class="has-header has-subheader">
+        <ion-refresher
+          pulling-text="Pull to refresh..."
+          on-refresh="doRefresh()">
+        </ion-refresher>
+
         <ion-list>
             <ion-item ng-repeat="model in models | filter: searchKey" type="item-text-wrap" class="item-avatar item-icon-right" href="#/load/{{model.id}}">
                 <img src="img/lungs.png"/>
