@@ -66,6 +66,7 @@ angular.module('application.controllers', [])
             
             $scope.join = function () {
                 eval(joinFunc);
+                console.log($scope.perc_rule);
                 $scope.probability = $scope.patient['probability'];
                 console.log("Evaluated Join Function");
                 PlotData.setPoint([$scope.patient['probability'], $scope.output_value[0]]);

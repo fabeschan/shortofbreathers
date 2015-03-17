@@ -1,6 +1,6 @@
 angular.module('application.services', ['ngResource'])
 
-    .factory('OtherServerSession', ['$http', function ($http) {
+    .factory('ServerSession', ['$http', function ($http) {
         var ServerSession = {};
 
         ServerSession.getModels = function() {
@@ -18,7 +18,7 @@ angular.module('application.services', ['ngResource'])
         return ServerSession;
     }])
 
-    .factory('ServerSession', ['$http', function ($http) {
+    .factory('OtherServerSession', ['$http', function ($http) {
         var ServerSession = {};
 
         ServerSession.getModels = function() {
