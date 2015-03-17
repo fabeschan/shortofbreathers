@@ -64,7 +64,7 @@ angular.module('application', ['ionic', 'autofields', 'application.controllers',
             }
 			fieldElements.label.addClass('checkbox');
 			fieldElements.fieldContainer.removeClass('checkbox');
-			fieldElements.fieldContainer.addClass('item item-checkbox');
+			fieldElements.fieldContainer.addClass('item item-checkbox item-text-wrap');
 			fieldElements.fieldContainer.append(lbl);
             return fieldElements.fieldContainer;
         });
