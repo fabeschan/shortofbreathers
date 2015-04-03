@@ -22,6 +22,12 @@
                 <p>{{model.desc}}</p>
             </ion-item>
         </ion-list>
+
+                {{msg}}
+                <button class="button" ng-click="download('test.js', 'imgFile', 'http://ec2-54-165-60-76.compute-1.amazonaws.com/med_models')">Download</button>
+                <button class="button" ng-click="load('test.js', 'imgFile')">load</button>
+
+
     </ion-content>
 
 </ion-view>
