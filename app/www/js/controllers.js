@@ -1,9 +1,13 @@
 angular.module('application.controllers', [])
 
-    .controller('ModelListCtrl', ['$scope', 'ServerSessionURL', '$ionicLoading', '$http', function ($scope, ServerSession, $ionicLoading, $http) {
+    .controller('ModelListCtrl', ['$scope', 'LocalStorage', '$http', function ($scope, LocalStorage, $http) {
 
         $scope.status;
-        $scope.models;
+        $scope.mmm = {
+            msg: 'BNM',
+            models: {}
+        };
+
         //getModels();
         //$scope.doRefresh = getModels;
         //function getModels () {
@@ -20,116 +24,18 @@ angular.module('application.controllers', [])
         //        });
         //}
 
-        $scope.download = function(fname, objname, url) {
-            //$ionicLoading.show({
-            //  template: 'Loading...'
-            //});
-            $scope.fname = fname;
-            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
-                fs.root.getDirectory(
-                    "MediRisk",
-                    {
-                        create: true
-                    },
-                    function(dirEntry) {
-                        dirEntry.getFile(
-                            fname, 
-                            {
-                                create: true, 
-                                exclusive: false
-                            }, 
-                            function gotFileEntry(fe) {
-                                var p = fe.toURL();
-                                fe.remove();
-                                ft = new FileTransfer();
-                                ft.download(
-                                    encodeURI(url),
-                                    p,
-                                    function(entry) {
-                                        //$ionicLoading.hide();
-                                        $scope[objname] = entry.toURL();
-
-                                        $http.get($scope[objname])
-                                            .success(function (models) {
-                                                $scope[objname] = models;
-                                            })
-                                            .error(function (error) {
-                                                $scope.msg = 'Unable to download models: ' + error.message;
-                                                $scope.load(fname, urlname);
-                                            })
-                                            .finally(function() {
-                                                // Stop the ion-refresher from spinning
-                                                $scope.$broadcast('scroll.refreshComplete');
-                                            });
-                                    },
-                                    function(error) {
-                                        //$ionicLoading.hide();
-                                        alert("Download Error Source -> " + error.source);
-                                    },
-                                    false,
-                                    null
-                                );
-                            }, 
-                            function() {
-                                //$ionicLoading.hide();
-                                console.log("Get file failed");
-                            }
-                        );
-                    }
-                );
-            },
-            function() {
-                //$ionicLoading.hide();
-                console.log("Request for filesystem failed");
-            });
-        }
-
-        $scope.load = function(fname, urlname) {
-            //$ionicLoading.show({
-            //  template: 'Loading...'
-            //});
-            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
-                fs.root.getDirectory(
-                    "MediRisk",
-                    {
-                        create: false
-                    },
-                    function(dirEntry) {
-                        dirEntry.getFile(
-                            fname, 
-                            {
-                                create: false, 
-                                exclusive: false
-                            }, 
-                            function gotFileEntry(fe) {
-                                //$ionicLoading.hide();
-                                $scope[urlname] = fe.toURL();
-
-                                $http.get($scope[urlname])
-                                    .success(function (models) {
-                                        $scope[urlname] = models;
-                                    })
-                                    .error(function (error) {
-                                        $scope.msg = 'Unable to load models: ' + error.message;
-                                    })
-                                    .finally(function() {
-                                        // Stop the ion-refresher from spinning
-                                        $scope.$broadcast('scroll.refreshComplete');
-                                    });
-                            }, 
-                            function(error) {
-                                //$ionicLoading.hide();
-                                console.log("Error getting file");
-                            }
-                        );
-                    }
-                );
-            },
-            function() {
-                //$ionicLoading.hide();
-                console.log("Error requesting filesystem");
-            });
-        }
+        $scope.download = function(){
+            //console.log(LocalStorage.models.models);
+            //$scope.models = LocalStorage.models.models;
+            LocalStorage.download('test.js', $scope.mmm, 'http://ec2-54-165-60-76.compute-1.amazonaws.com/med_models');
+            $scope.models = $scope.mmm.models;
+        };
+        $scope.load = function(){
+            //console.log(LocalStorage.models.models);
+            //$scope.models = LocalStorage.models.models;
+            LocalStorage.load('test.js', $scope.mmm);
+            $scope.models = $scope.mmm.models;
+        };
 
     }])
 
