@@ -8,8 +8,8 @@ angular.module('application.controllers', [])
             models: {}
         };
 
-        //getModels();
-        //$scope.doRefresh = getModels;
+        getModels();
+        $scope.doRefresh = getModels;
         $scope.getModels = getModels;
         function getModels () {
             ServerSession.getModels ()
