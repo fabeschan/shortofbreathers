@@ -1,6 +1,6 @@
 angular.module('application.controllers', [])
 
-    .controller('ModelListCtrl', ['$scope', 'LocalStorage', '$http', function ($scope, LocalStorage, $http) {
+    .controller('ModelListCtrl', ['$scope', 'LocalStorage', 'ServerSession', '$http', function ($scope, LocalStorage, ServerSession, $http) {
 
         $scope.status;
         $scope.mmm = {
@@ -10,19 +10,26 @@ angular.module('application.controllers', [])
 
         //getModels();
         //$scope.doRefresh = getModels;
-        //function getModels () {
-        //    ServerSession.getModels ()
-        //        .success(function (models) {
-        //            $scope.models = models;
-        //        })
-        //        .error(function (error) {
-        //            $scope.status = 'Unable to load models: ' + error.message;
-        //        })
-        //        .finally(function() {
-        //            // Stop the ion-refresher from spinning
-        //            $scope.$broadcast('scroll.refreshComplete');
-        //        });
-        //}
+        $scope.getModels = getModels;
+        function getModels () {
+            ServerSession.getModels ()
+                .success(function (models) {
+                    console.log("success1");
+                    $scope.models = models;
+                    $scope.download()
+                    console.log("success2");
+                })
+                .error(function (error) {
+                    $scope.status = 'Unable to load models: ' + error.message;
+                    console.log("offline?");
+                    $scope.load();
+                })
+                .finally(function() {
+                    // Stop the ion-refresher from spinning
+                    console.log("finally");
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
+        }
 
         $scope.download = function(){
             //console.log(LocalStorage.models.models);

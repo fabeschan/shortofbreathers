@@ -68,23 +68,9 @@ angular.module('application.services', ['ngResource'])
                                     function(entry) {
                                         var localurl = entry.toURL();
                                         console.log(localurl);
-                                        $http.get(localurl)
-                                            .success(function (retmodels) {
-                                                obj.msg = localurl;
-                                                obj.models = retmodels;
-                                            })
-                                            .error(function (error) {
-                                                //$scope.msg = 'Unable to download models: ' + error.message;
-                                                load(fname, obj);
-                                            })
-                                            .finally(function() {
-                                                console.log(models.models);
-                                                // Stop the ion-refresher from spinning
-                                                $scope.$broadcast('scroll.refreshComplete');
-                                            });
                                     },
                                     function(error) {
-                                        load(fname, obj);
+                                        //load(fname, obj);
                                         console.log("Download Error Source -> " + error.source);
                                     },
                                     false,
