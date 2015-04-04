@@ -15,8 +15,8 @@ angular.module('application.controllers', [])
             ServerSession.getModels ()
                 .success(function (models) {
                     console.log("success1");
-                    $scope.models = models;
                     $scope.download()
+                    $scope.models = models;
                     console.log("success2");
                 })
                 .error(function (error) {
@@ -40,8 +40,8 @@ angular.module('application.controllers', [])
         $scope.load = function(){
             //console.log(LocalStorage.models.models);
             //$scope.models = LocalStorage.models.models;
-            LocalStorage.load('test.js', $scope.mmm);
-            $scope.models = $scope.mmm.models;
+            LocalStorage.load('test.js', $scope);
+            //$scope.models = $scope.mmm.models;
         };
 
     }])
