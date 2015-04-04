@@ -1,24 +1,24 @@
 angular.module('application.controllers', [])
 
-    .controller('ModelListCtrl', ['$scope', 'ServerSession', '$ionicLoading', '$http', function ($scope, ServerSession, $ionicLoading, $http) {
+    .controller('ModelListCtrl', ['$scope', 'ServerSessionURL', '$ionicLoading', '$http', function ($scope, ServerSession, $ionicLoading, $http) {
 
         $scope.status;
         $scope.models;
         //getModels();
         //$scope.doRefresh = getModels;
-        function getModels () {
-            ServerSession.getModels ()
-                .success(function (models) {
-                    $scope.models = models;
-                })
-                .error(function (error) {
-                    $scope.status = 'Unable to load models: ' + error.message;
-                })
-                .finally(function() {
-                    // Stop the ion-refresher from spinning
-                    $scope.$broadcast('scroll.refreshComplete');
-                });
-        }
+        //function getModels () {
+        //    ServerSession.getModels ()
+        //        .success(function (models) {
+        //            $scope.models = models;
+        //        })
+        //        .error(function (error) {
+        //            $scope.status = 'Unable to load models: ' + error.message;
+        //        })
+        //        .finally(function() {
+        //            // Stop the ion-refresher from spinning
+        //            $scope.$broadcast('scroll.refreshComplete');
+        //        });
+        //}
 
         $scope.download = function(fname, objname, url) {
             //$ionicLoading.show({
@@ -27,7 +27,7 @@ angular.module('application.controllers', [])
             $scope.fname = fname;
             window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
                 fs.root.getDirectory(
-                    "ExampleProject",
+                    "MediRisk",
                     {
                         create: true
                     },
@@ -51,11 +51,16 @@ angular.module('application.controllers', [])
 
                                         $http.get($scope[objname])
                                             .success(function (models) {
-                                                $scope.models = models;
+                                                $scope[objname] = models;
                                             })
                                             .error(function (error) {
-                                                $scope.msg = 'Unable to load models: ' + error.message;
+                                                $scope.msg = 'Unable to download models: ' + error.message;
+                                                $scope.load(fname, urlname);
                                             })
+                                            .finally(function() {
+                                                // Stop the ion-refresher from spinning
+                                                $scope.$broadcast('scroll.refreshComplete');
+                                            });
                                     },
                                     function(error) {
                                         //$ionicLoading.hide();
@@ -85,7 +90,7 @@ angular.module('application.controllers', [])
             //});
             window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
                 fs.root.getDirectory(
-                    "ExampleProject",
+                    "MediRisk",
                     {
                         create: false
                     },
@@ -97,19 +102,23 @@ angular.module('application.controllers', [])
                                 exclusive: false
                             }, 
                             function gotFileEntry(fe) {
-                                $ionicLoading.hide();
+                                //$ionicLoading.hide();
                                 $scope[urlname] = fe.toURL();
 
                                 $http.get($scope[urlname])
                                     .success(function (models) {
-                                        $scope.models = models;
+                                        $scope[urlname] = models;
                                     })
                                     .error(function (error) {
                                         $scope.msg = 'Unable to load models: ' + error.message;
                                     })
+                                    .finally(function() {
+                                        // Stop the ion-refresher from spinning
+                                        $scope.$broadcast('scroll.refreshComplete');
+                                    });
                             }, 
                             function(error) {
-                                $ionicLoading.hide();
+                                //$ionicLoading.hide();
                                 console.log("Error getting file");
                             }
                         );
@@ -117,7 +126,7 @@ angular.module('application.controllers', [])
                 );
             },
             function() {
-                $ionicLoading.hide();
+                //$ionicLoading.hide();
                 console.log("Error requesting filesystem");
             });
         }

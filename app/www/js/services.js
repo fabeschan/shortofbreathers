@@ -18,19 +18,22 @@ angular.module('application.services', ['ngResource'])
         return ServerSession;
     }])
 
-    .factory('OtherServerSession', ['$http', function ($http) {
+    .factory('ServerSessionURL', ['$http', function ($http) {
         var ServerSession = {};
 
         ServerSession.getModels = function() {
-            return $http.get('http://localhost:8080/med_models');
+            //return $http.get('http://localhost:8080/med_models');
+            return 'http://ec2-54-165-60-76.compute-1.amazonaws.com/med_models';
         };
 
         ServerSession.getModel = function(id) {
-            return $http.get('http://localhost:8080/med_model/' + id);
+            //return $http.get('http://localhost:8080/med_model/' + id);
+            return 'http://ec2-54-165-60-76.compute-1.amazonaws.com/med_model/';
         };
 
         ServerSession.getModelInfo = function(id) {
-            return $http.get('http://localhost:8080/get_model/' + id);
+            //return $http.get('http://localhost:8080/get_model/' + id);
+            return 'http://ec2-54-165-60-76.compute-1.amazonaws.com/get_model/';
         };
 
         return ServerSession;
