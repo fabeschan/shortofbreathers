@@ -40,7 +40,16 @@ angular.module('application', ['ionic', 'autofields', 'application.controllers',
                 url: '/',
                 templateUrl: 'templates/menu.html'
             })
-
+            
+			.state('legal', {
+                url: '/legal',
+                templateUrl: 'templates/legal.html'
+            })
+			
+			.state('instructions', {
+                url: '/instructions',
+                templateUrl: 'templates/instructions.html'
+            })			
             .state('manage', {
                 url: '/manage',
                 templateUrl: 'templates/manage.html',
