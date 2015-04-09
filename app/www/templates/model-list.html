@@ -16,7 +16,7 @@
 
         <ion-list>
             <ion-item ng-repeat="model in models track by $index | filter: searchKey" type="item-text-wrap" class="item-avatar item-icon-right" href="#/load/{{$index}}">
-                <img src="img/lungs.png"/>
+                <img ng-src="{{model.logo}}"/>
                 {{model.name}}
                 <i class="icon ion-chevron-right"></i>
                 <p>{{model.desc}}</p>
