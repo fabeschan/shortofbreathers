@@ -7,24 +7,6 @@ angular.module('application.services', ['ngResource'])
             //return $http.get('http://ec2-54-165-60-76.compute-1.amazonaws.com/med_models');
             return $http.get('http://ec2-54-165-60-76.compute-1.amazonaws.com/models/get');
         };
-
-        ServerSession.getModel = function(id) {
-            return $http.get('http://ec2-54-165-60-76.compute-1.amazonaws.com/med_model/' + id);
-        };
-
-        ServerSession.getModelInfo = function(id) {
-            return $http.get('http://ec2-54-165-60-76.compute-1.amazonaws.com/get_model/' + id);
-        };
-
-        return ServerSession;
-    }])
-
-    .factory('ServerSessionURL', ['$http', function ($http) {
-        var ServerSession = {};
-
-        ServerSession.getModels = function() {
-            return 'http://ec2-54-165-60-76.compute-1.amazonaws.com/models/get';
-        };
         return ServerSession;
     }])
 

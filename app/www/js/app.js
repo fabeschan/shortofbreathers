@@ -49,11 +49,6 @@ angular.module('application', ['ionic', 'autofields', 'application.controllers',
 			.state('instructions', {
                 url: '/instructions',
                 templateUrl: 'templates/instructions.html'
-            })			
-            .state('manage', {
-                url: '/manage',
-                templateUrl: 'templates/manage.html',
-                controller: 'ManageCtrl'
             });
 
         $urlRouterProvider.otherwise('/');

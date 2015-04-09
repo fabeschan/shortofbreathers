@@ -105,20 +105,4 @@ angular.module('application.controllers', [])
                 var plot = $.plot($("#placeholder"), [$scope.dataset[0], $scope.dataset[1]], $scope.options);
 
             }
-    }])
-
-    .controller('ManageCtrl', ['$scope', 'ServerSession', 
-        function ($scope, ServerSession) {
-            $scope.status;
-            $scope.models;
-            getModels();
-            function getModels () {
-                ServerSession.getModels ()
-                    .success(function (models) {
-                        $scope.models = models;
-                    })
-                    .error(function (error) {
-                        $scope.status = 'Unable to load models: ' + error.message;
-                    });
-            }
     }]);
