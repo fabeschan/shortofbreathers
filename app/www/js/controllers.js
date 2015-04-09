@@ -5,7 +5,7 @@ angular.module('application.controllers', [])
         $scope.status;
 
         getModels();
-        $rootScope.doRefresh = getModels;
+        $scope.doRefresh = getModels;
         $rootScope.getModels = getModels;
         function getModels () {
             ServerSession.getModels ()
@@ -41,20 +41,31 @@ angular.module('application.controllers', [])
             $scope.models;
             var joinFunc;
             $scope.message = "No message";
+            $scope.$on('scroll.refreshComplete', function(event){
+                load_model();   
+            });
 
             var id = $routeParams.param;
-            $scope.model_name = $rootScope.models[id].name;
-            $scope.patient = $rootScope.models[id].src.patient;
-            $scope.schema = $rootScope.models[id].src.schema;
-            $scope.lookup = $rootScope.models[id].src.lookup;
+            $scope.doRefresh = function(){
+                $rootScope.getModels();
+                load_model();
+            };
 
-            joinFunc = $rootScope.models[id].src.join;
-            if ($rootScope.models[id].src.lookup !== undefined && $rootScope.models[id].src.lookup.plotOutput !== undefined){
-                plotEqn = eval('(function(probability) {'+$scope.lookup.plotOutput+'})');
-                PlotData.setEquation(plotEqn);
-                $scope.hasPlot = true;
-            }
-            else { $scope.hasPlot = false; }
+            var load_model = function(){
+                $scope.model_name = $rootScope.models[id].name;
+                $scope.patient = $rootScope.models[id].src.patient;
+                $scope.schema = $rootScope.models[id].src.schema;
+                $scope.lookup = $rootScope.models[id].src.lookup;
+
+                joinFunc = $rootScope.models[id].src.join;
+                if ($rootScope.models[id].src.lookup !== undefined && $rootScope.models[id].src.lookup.plotOutput !== undefined){
+                    plotEqn = eval('(function(probability) {'+$scope.lookup.plotOutput+'})');
+                    PlotData.setEquation(plotEqn);
+                    $scope.hasPlot = true;
+                }
+                else { $scope.hasPlot = false; }
+            };
+            load_model();
 
             $scope.bracket = function(num, obj){
                 var k = [];
