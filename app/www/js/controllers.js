@@ -13,6 +13,10 @@ angular.module('application.controllers', [])
                     console.log("success1");
                     $rootScope.download()
                     $rootScope.models = models;
+                    var i = 0;
+                    for (var i=0; i<$rootScope.models.length; i++){
+                        $rootScope.models[i].position = i;
+                    }
                     console.log("success2");
                 })
                 .error(function (error) {
@@ -46,6 +50,7 @@ angular.module('application.controllers', [])
             });
 
             var id = $routeParams.param;
+            console.log(id);
             $scope.doRefresh = function(){
                 $rootScope.getModels();
                 load_model();
