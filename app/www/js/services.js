@@ -4,7 +4,8 @@ angular.module('application.services', ['ngResource'])
         var ServerSession = {};
 
         ServerSession.getModels = function() {
-            return $http.get('http://ec2-54-165-60-76.compute-1.amazonaws.com/med_models');
+            //return $http.get('http://ec2-54-165-60-76.compute-1.amazonaws.com/med_models');
+            return $http.get('http://ec2-54-165-60-76.compute-1.amazonaws.com/models/get');
         };
 
         ServerSession.getModel = function(id) {
@@ -22,29 +23,13 @@ angular.module('application.services', ['ngResource'])
         var ServerSession = {};
 
         ServerSession.getModels = function() {
-            //return $http.get('http://localhost:8080/med_models');
-            return 'http://ec2-54-165-60-76.compute-1.amazonaws.com/med_models';
+            return 'http://ec2-54-165-60-76.compute-1.amazonaws.com/models/get';
         };
-
-        ServerSession.getModel = function(id) {
-            //return $http.get('http://localhost:8080/med_model/' + id);
-            return 'http://ec2-54-165-60-76.compute-1.amazonaws.com/med_model/';
-        };
-
-        ServerSession.getModelInfo = function(id) {
-            //return $http.get('http://localhost:8080/get_model/' + id);
-            return 'http://ec2-54-165-60-76.compute-1.amazonaws.com/get_model/';
-        };
-
         return ServerSession;
     }])
 
     .service('LocalStorage', ['$http', function ($http) {
-        var models ={
-            msg: "AHAHAHHA",
-            models: {}
-        };
-        var download = function(fname, obj, url) {
+        var download = function(fname, url) {
             window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fs) {
                 fs.root.getDirectory(
                     "MediRisk",
@@ -70,7 +55,6 @@ angular.module('application.services', ['ngResource'])
                                         console.log(localurl);
                                     },
                                     function(error) {
-                                        //load(fname, obj);
                                         console.log("Download Error Source -> " + error.source);
                                     },
                                     false,
@@ -131,13 +115,7 @@ angular.module('application.services', ['ngResource'])
             });
         };
 
-        //download('test.js', models, 'http://ec2-54-165-60-76.compute-1.amazonaws.com/med_models');
-        //load('test.js', models);
-        console.log("222");
-        console.log(models.msg);
-        console.log(models.models);
         return {
-            models: models,
             load: load,
             download: download
         };

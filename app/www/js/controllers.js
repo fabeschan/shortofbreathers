@@ -1,96 +1,60 @@
 angular.module('application.controllers', [])
 
-    .controller('ModelListCtrl', ['$scope', 'LocalStorage', 'ServerSession', '$http', function ($scope, LocalStorage, ServerSession, $http) {
+    .controller('ModelListCtrl', ['$scope', 'LocalStorage', 'ServerSession', '$rootScope', function ($scope, LocalStorage, ServerSession, $rootScope) {
 
         $scope.status;
-        $scope.mmm = {
-            msg: 'BNM',
-            models: {}
-        };
 
         getModels();
-        $scope.doRefresh = getModels;
-        $scope.getModels = getModels;
+        $rootScope.doRefresh = getModels;
+        $rootScope.getModels = getModels;
         function getModels () {
             ServerSession.getModels ()
                 .success(function (models) {
                     console.log("success1");
-                    $scope.download()
-                    $scope.models = models;
+                    $rootScope.download()
+                    $rootScope.models = models;
                     console.log("success2");
                 })
                 .error(function (error) {
                     $scope.status = 'Unable to load models: ' + error.message;
                     console.log("offline?");
-                    $scope.load();
+                    $rootScope.load();
                 })
                 .finally(function() {
                     // Stop the ion-refresher from spinning
                     console.log("finally");
-                    $scope.$broadcast('scroll.refreshComplete');
+                    $rootScope.$broadcast('scroll.refreshComplete');
                 });
         }
 
-        $scope.download = function(){
-            //console.log(LocalStorage.models.models);
-            //$scope.models = LocalStorage.models.models;
-            LocalStorage.download('test.js', $scope.mmm, 'http://ec2-54-165-60-76.compute-1.amazonaws.com/med_models');
-            $scope.models = $scope.mmm.models;
+        $rootScope.download = function(){
+            LocalStorage.download('test.js', 'http://ec2-54-165-60-76.compute-1.amazonaws.com/models/get');
         };
-        $scope.load = function(){
-            //console.log(LocalStorage.models.models);
-            //$scope.models = LocalStorage.models.models;
-            LocalStorage.load('test.js', $scope);
-            //$scope.models = $scope.mmm.models;
+        $rootScope.load = function(){
+            LocalStorage.load('test.js', $rootScope);
         };
 
     }])
 
-    .controller('LoadCtrl', ['$scope', 'ServerSession', 'PlotData', '$stateParams',
-        function ($scope, ServerSession, PlotData, $routeParams) {
+    .controller('LoadCtrl', ['$scope', '$rootScope', 'ServerSession', 'PlotData', '$stateParams',
+        function ($scope, $rootScope, ServerSession, PlotData, $routeParams) {
             $scope.models;
             var joinFunc;
             $scope.message = "No message";
 
-            getModels();
+            var id = $routeParams.param;
+            $scope.model_name = $rootScope.models[id].name;
+            $scope.patient = $rootScope.models[id].src.patient;
+            $scope.schema = $rootScope.models[id].src.schema;
+            $scope.lookup = $rootScope.models[id].src.lookup;
 
-            function getModels () {
-                ServerSession.getModels ()
-                    .success(function (models) {
-                        $scope.models = models;
-                        getModelInfo($routeParams.param);
-                    })
-                    .error(function (error) {
-                        $scope.status = 'Unable to load models: ' + error.message;
-                    })
-                    .finally(function() {
-                        // Stop the ion-refresher from spinning
-                        $scope.$broadcast('scroll.refreshComplete');
-                    });
+            joinFunc = $rootScope.models[id].src.join;
+            if ($rootScope.models[id].src.lookup !== undefined && $rootScope.models[id].src.lookup.plotOutput !== undefined){
+                plotEqn = eval('(function(probability) {'+$scope.lookup.plotOutput+'})');
+                PlotData.setEquation(plotEqn);
+                $scope.hasPlot = true;
             }
-
-            function getModelInfo (id) {
-                ServerSession.getModelInfo (id)
-                    .success(function (modelinfo) {
-                        console.log("getModelinfo");
-                        $scope.model_name = $scope.models[id].name;
-                        $scope.patient = modelinfo.patient;
-                        $scope.schema = modelinfo.schema;
-                        $scope.lookup = modelinfo.lookup;
-
-                        joinFunc = modelinfo.join;
-                        if (modelinfo.lookup !== undefined && modelinfo.lookup.plotOutput !== undefined){
-                            plotEqn = eval('(function(probability) {'+$scope.lookup.plotOutput+'})');
-                            PlotData.setEquation(plotEqn);
-                            $scope.hasPlot = true;
-                        }
-                        else { $scope.hasPlot = false; }
-                        $scope.join();
-                    })
-                    .error(function (error) { console.log('Unable to load models: ' + error.message); });
-            }
-
-            $scope.doRefresh = getModels;
+            else { $scope.hasPlot = false; }
 
             $scope.bracket = function(num, obj){
                 var k = [];
@@ -107,6 +71,7 @@ angular.module('application.controllers', [])
                 console.log("Evaluated Join Function");
                 PlotData.setPoint([$scope.patient['probability'], $scope.output_value[0]]);
             };
+            $scope.join();
 
     }])
 
